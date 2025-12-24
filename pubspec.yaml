@@ -1,7 +1,7 @@
 name: emv_qr_builder
-description: A starting point for Dart libraries or applications.
+description: A lightweight, pure Dart library for generating EMVCo Compliant QR Code payloads. Support VietQR (NapAS).
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/Cat1m/emv_qr_builder
 
 environment:
   sdk: ^3.10.1
