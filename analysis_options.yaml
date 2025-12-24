@@ -1,0 +1,19 @@
+# analysis_options.yaml
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    # Documentation
+    public_member_api_docs: true
+    
+    # Style & Formatting
+    always_declare_return_types: true
+    omit_local_variable_types: true
+    prefer_single_quotes: true
+    sort_constructors_first: true
+    unnecessary_this: true
+    
+    # Best Practices
+    avoid_print: true # Package library shouldn't print to console
+    prefer_final_fields: true
+    prefer_const_constructors: true
