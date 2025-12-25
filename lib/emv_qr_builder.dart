@@ -8,5 +8,6 @@ export 'src/models/emv_data.dart';
 export 'src/generator/emv_builder.dart';
 export 'src/factories/vietqr_factory.dart';
 export 'src/utils/vietqr_helper.dart';
-// Note: We intentionally do not export 'constants' or 'crc16' 
+
+// Note: We intentionally do not export 'constants' or 'crc16'
 // to keep the public API clean.
