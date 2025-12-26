@@ -1,4 +1,5 @@
 import '../models/emv_data.dart';
+import '../utils/vietqr_helper.dart';
 
 /// A factory class to create [EmvData] specifically for VietQR (NAPAS).
 ///
@@ -16,8 +17,8 @@ class VietQrFactory {
   /// [bankBin]: The 6-digit BIN code of the bank (e.g., '970436').
   /// [accountNumber]: The beneficiary account number.
   /// [amount]: (Optional) The amount to transfer.
-  /// [description]: (Optional) The transaction description/content.
-  /// [accountName]: (Optional) Used for EMV 'Merchant Name' field.
+  /// [description]: (Optional) The transaction description/content. Will be normalized.
+  /// [accountName]: (Optional) Used for EMV 'Merchant Name' field. Will be normalized.
   /// Defaults to 'KHACH HANG' to satisfy EMV requirements without affecting NAPAS lookup.
   static EmvData createPersonal({
     required String bankBin,
@@ -26,6 +27,12 @@ class VietQrFactory {
     String? description,
     String accountName = 'KHACH HANG',
   }) {
+    // Sanitize inputs to ensure compatibility with banking systems
+    final safeAccountName = StringUtils.normalize(accountName);
+    final safeDescription = description != null
+        ? StringUtils.normalize(description)
+        : null;
+
     // Step 1: Build the Beneficiary Info (Sub-field 01 of ID 38)
     // Structure: [00][Len][BIN] + [01][Len][AccountNum]
     final beneficiaryValue =
@@ -44,15 +51,15 @@ class VietQrFactory {
     // Step 3: Build Additional Data (ID 62)
     // VietQR uses sub-ID '08' for the description/message.
     String? additionalData;
-    if (description != null && description.isNotEmpty) {
-      additionalData = _formatTlv('08', description);
+    if (safeDescription != null && safeDescription.isNotEmpty) {
+      additionalData = _formatTlv('08', safeDescription);
     }
 
     // Step 4: Return the standardized EMV Data
     return EmvData(
       currency: '704', // VND
       country: 'VN',
-      merchantName: accountName,
+      merchantName: safeAccountName,
       merchantCity: 'Vietnam', // Generic city to satisfy requirements
       merchantAccountInfo: {'38': id38Value},
       amount: amount,
