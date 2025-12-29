@@ -1,5 +1,7 @@
-/// Helper class to sanitize strings for banking compatibility.
+/// Utility class to sanitize strings for banking compatibility.
 class StringUtils {
+  const StringUtils._();
+
   /// Normalizes the input string to be compatible with banking systems.
   ///
   /// This method performs the following operations:
@@ -13,7 +15,6 @@ class StringUtils {
     var result = _removeDiacritics(input);
 
     // 2. Keep only safe characters (A-Z, 0-9, space, dot, dash)
-    // Removes special characters that might cause errors in banking systems.
     result = result.replaceAll(RegExp(r'[^a-zA-Z0-9 .-]'), ' ');
 
     // 3. Truncate if exceeding maximum length (50 characters)
@@ -48,5 +49,23 @@ class StringUtils {
       str = str.replaceAll(vietnameseRegex[i], vietnamese[i]);
     }
     return str;
+  }
+}
+
+/// Helper class to format data according to TLV (Tag-Length-Value) standard.
+class TlvHelper {
+  const TlvHelper._();
+
+  /// Formats the [id] and [value] into a TLV string.
+  ///
+  /// Format: [ID (2 chars)][Length (2 chars)][Value]
+  /// Example: id="01", value="ABC" -> "0103ABC"
+  ///
+  /// Returns an empty string if [value] is null or empty.
+  static String format(String id, String? value) {
+    if (value == null || value.isEmpty) return '';
+
+    final length = value.length.toString().padLeft(2, '0');
+    return '$id$length$value';
   }
 }
